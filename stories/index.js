@@ -149,7 +149,9 @@ storiesOf("Appointment", module)
   .add("Header", () => <Header time="12pm" />)
   .add("Empty", () => <Empty onAdd={action("onAdd")}/>)
   .add("Show", () => (
-    <Show 
+    <Show
+      student="Lydia Miller-Jones"
+      interviewer={interviewer}
       onEdit={action("onEdit")}
       onDelete={action("onDelete")}
     />

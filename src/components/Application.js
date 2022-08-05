@@ -52,6 +52,10 @@ export default function Application(props) {
     days: []
   });
 
+  // updates the state with the new day
+  const setDay = day => setState(Object.assign({}, state, {day}));
+  const setDays = (days) => setState(prev => (Object.assign({}, prev, {days})));
+
   useEffect(() => {
     axios
     .get("/api/days")

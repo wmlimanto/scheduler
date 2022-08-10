@@ -43,12 +43,30 @@ export default function Application(props) {
   const appointmentsArray = dailyAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
 
+  // allows us to change the local state when we book an interview & update database with interview data
+  const bookInterview = (id, interview) => {
+    const appointment = {...state.appointments[id], interview: { ...interview }};
+    const appointments = {...state.appointments, [id]: appointment};
+
+    return new Promise((resolve, reject) => {
+      axios.put(`/api/appointments/${id}`, {interview})
+        .then(() => {
+          setState({...state, appointments});
+          resolve();
+        }).catch(err => {
+          console.log(err.message);
+          reject();
+        });
+    });
+  };
+
     return (
       <Appointment
         key={appointment.id}
         {...appointment}
         interview={interview}
         interviewers={interviewers}
+        bookInterview={bookInterview}
        /> 
     )
   }) 

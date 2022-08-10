@@ -34,15 +34,6 @@ export default function Application(props) {
       }))
     });
   })
-  
-  // variable to hold a list of appointments for that day
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
-  const interviewers = getInterviewersForDay(state, state.day)
-
-  const appointmentsArray = dailyAppointments.map(appointment => {
-    const interview = getInterview(state, appointment.interview);
-
   // allows us to change the local state when we book an interview & update database with interview data
   const bookInterview = (id, interview) => {
     const appointment = {...state.appointments[id], interview: { ...interview }};
@@ -60,6 +51,32 @@ export default function Application(props) {
     });
   };
 
+  // use appointment id to find appointment and set it's interview data to null
+  const cancelInterview = (id) => {
+    const appointment = {...state.appointments[id], interview: null};
+    const appointments = {...state.appointments, [id]: appointment};
+
+    return new Promise((resolve, reject) => {
+      axios.delete(`/api/appointments/${id}`)
+        .then(() => {
+          setState({...state, appointments});
+          resolve();
+        }).catch(err => {
+          console.log(err.message);
+          reject();
+        });
+    });
+  };
+  
+  // variable to hold a list of appointments for that day
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  const interviewers = getInterviewersForDay(state, state.day)
+
+  const appointmentsArray = dailyAppointments.map(appointment => {
+    const interview = getInterview(state, appointment.interview);
+
+    
     return (
       <Appointment
         key={appointment.id}
@@ -67,6 +84,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
        /> 
     )
   }) 
@@ -95,6 +113,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {appointmentsArray}
+        <Appointment time="5pm"/>
       </section>
     </main>
   );

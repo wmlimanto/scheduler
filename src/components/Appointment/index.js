@@ -18,6 +18,7 @@ const CREATE = "CREATE";
 const SAVING = "SAVING";
 const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
+const EDIT = "EDIT";
 
 
 export default function Appointment(props) {
@@ -45,7 +46,7 @@ export default function Appointment(props) {
   };
 
   // delete operation that calls cancelInterview and show DELETING indicator while calling
-  const onDelete = function() {
+  const onDelete = () => {
     transition(CONFIRM);
   }
 
@@ -62,6 +63,10 @@ export default function Appointment(props) {
       .catch(err => console.log(err.message));
   }
 
+  const onEdit = () => {
+    transition(EDIT);
+  }
+
   return (
     <article className="appointment">
       <Header time={time}/>
@@ -71,6 +76,7 @@ export default function Appointment(props) {
           student={interview.student}
           interviewer={interview.interviewer}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       )}
       {mode === CREATE && (
@@ -88,6 +94,15 @@ export default function Appointment(props) {
           onConfirm={onConfirm}
           message = "Would you like to delete this appointment?"
         />)}
+      {mode === EDIT && (
+        <Form
+          student={interview.student}
+          interviewer={interview.interviewer}
+          interviewers={interviewers}
+          onCancel={onCancel}
+          onSave={onSave}
+        />
+      )}
     </article>
   );
 }

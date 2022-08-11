@@ -6,7 +6,8 @@ import Button from "components/Button";
 export default function Form(props) {
 
   const [student, setStudent] = useState(props.student || "");
-  const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  const [interviewer, setInterviewer] = useState(props.interviewer?.id || null);
+  const [error, setError] = useState("");
 
   const reset = function() {
     setStudent("");
@@ -18,8 +19,15 @@ export default function Form(props) {
     props.onCancel();
   };
 
+  // save function now handles errors ie) if student or interviewer is not filled in or selected
   const save = function() {
-    props.onSave(student, interviewer);
+    if (!student) {
+      setError("Please fill in student name")
+    } else if (!interviewer) {
+      setError("Please select interviewer")
+    } else {
+      props.onSave(student, interviewer);
+    }
   }
 
   return (
@@ -35,6 +43,11 @@ export default function Form(props) {
             onChange={(event) => setStudent(event.target.value)}
           />
         </form>
+        {error && (
+          <div>
+            {error}
+          </div>
+        )}
        <InterviewerList 
           interviewers={props.interviewers}
           value={interviewer}

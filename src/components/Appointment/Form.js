@@ -12,6 +12,7 @@ export default function Form(props) {
   const reset = function() {
     setStudent("");
     setInterviewer(null);
+    setError("");
   };
 
   const cancel = function() {
@@ -19,15 +20,18 @@ export default function Form(props) {
     props.onCancel();
   };
 
-  // save function now handles errors ie) if student or interviewer is not filled in or selected
-  const save = function() {
-    if (!student) {
-      setError("Please fill in student name")
-    } else if (!interviewer) {
-      setError("Please select interviewer")
-    } else {
-      props.onSave(student, interviewer);
+  // function to validate if student or interviewer is not filled in or selected
+  const validate = function() {
+    if (student === "") {
+      setError("Please fill in student name");
+      return;
     }
+    if (interviewer === null) {
+      setError("Please select interviewer");
+      return;
+    }
+    setError(null);
+      props.onSave(student, interviewer);
   }
 
   return (
@@ -41,13 +45,10 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             value={student}
             onChange={(event) => setStudent(event.target.value)}
+            data-testid="student-name-input"
           />
+          <section className="appointment__validation">{error}</section>
         </form>
-        {error && (
-          <div>
-            {error}
-          </div>
-        )}
        <InterviewerList 
           interviewers={props.interviewers}
           value={interviewer}
@@ -57,7 +58,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
        <section className="appointment__actions">
          <Button danger onClick={cancel}>Cancel</Button>
-         <Button confirm onClick={save}>Save</Button>
+         <Button confirm onClick={validate}>Save</Button>
        </section>
       </section>
     </main>

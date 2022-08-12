@@ -1,8 +1,7 @@
 import { useReducer, useEffect } from "react";
-import { action } from "@storybook/addon-actions";
 import axios from "axios";
 
-export default function useApplicationData(props) {
+export default function useApplicationData() {
 
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";

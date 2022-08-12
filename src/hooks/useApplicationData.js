@@ -87,7 +87,7 @@ export default function useApplicationData() {
           dispatch({type: SET_INTERVIEW, id, interview});
           resolve();
         }).catch(err => {
-          console.log(err.message);
+          console.log(err?.message ? err.message : err);
           reject();
         });
     });
@@ -103,7 +103,7 @@ export default function useApplicationData() {
           dispatch({type: SET_INTERVIEW, id, interview: null});
           resolve();
         }).catch(err => {
-          console.log(err.message);
+          console.log(err?.message ? err.message : err);
           reject();
         });
     });

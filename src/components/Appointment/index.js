@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { useEffect } from "react";
 
 import "components/Appointment/styles.scss";
 
@@ -36,7 +36,7 @@ export default function Appointment(props) {
 
   // save operation that calls bookInterview and show SAVING indicator while calling
   const onSave = (name, interviewer) => {
-    transition(SAVING, true);
+    transition(SAVING);
 
     const interview = {
       student: name,
@@ -65,11 +65,20 @@ export default function Appointment(props) {
     transition(EDIT);
   }
 
+  useEffect(() => {
+    if (interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    if (interview === null && mode === SHOW) {
+      transition(EMPTY);
+    }
+  }, [interview, transition, mode]);
+
   return (
     <article data-testid="appointment" className="appointment">
       <Header time={time}/>
-      {mode === EMPTY && <Empty onAdd={onAdd} />}
-      {mode === SHOW && (
+      {mode === EMPTY && !interview && <Empty onAdd={onAdd} />}
+      {mode === SHOW && interview && (
         <Show
           student={interview.student}
           interviewer={interview.interviewer}

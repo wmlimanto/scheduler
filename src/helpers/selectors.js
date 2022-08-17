@@ -1,4 +1,3 @@
-import React from 'react'
 
 // function receives two args state and day, should return an array of appointments for the given day
 export function getAppointmentsForDay(state, day) {
